@@ -1,0 +1,15 @@
+conda create --name RoboRL python=3.11
+
+# https://robosuite.ai/docs/installation.html?highlight=gym
+pip install robosuite
+pip install h5py
+pip install termcolor
+pip install gym
+pip install matplotlib
+pip install pybullet-svl
+pip install pynput
+
+pip install gymnasium
+pip install gymnasium-robotics
+pip install gymnasium-robotics[mujoco-py]
+
