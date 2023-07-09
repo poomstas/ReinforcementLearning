@@ -5,10 +5,6 @@ from robosuite.wrappers.gym_wrapper import GymWrapper
 import numpy as np
 import matplotlib.pyplot as plt
 
-# %% To Do List
-# TODO: Figure out how to access robot's camera observations - seems to be included in obs variable
-# TODO: Figure out what the observation array represents
-
 # %% Camera observation
 env = suite.make(
     env_name                = 'Lift',
@@ -21,16 +17,7 @@ env = suite.make(
     camera_names            = ['frontview'], # ['frontview', 'agentview', None, ?]
 )
 
-# %% No camera observation
-# env = suite.make(
-#     env_name                = 'Lift',
-#     robots                  = 'Panda',
-#     has_renderer            = True,
-#     has_offscreen_renderer  = False,
-#     use_camera_obs          = False,
-#     reward_shaping          = True,
-# )
-
+# %%
 # 42 for use_camera_obs = False
 # 393258 for ['frontview', 'agentview']
 # 196650 for ['frontview'] or ['agentview']
@@ -46,7 +33,6 @@ env = suite.make(
 # %%
 env = GymWrapper(env)
 
-# %%
 obs = env.reset()
 done = False
 
@@ -54,7 +40,6 @@ while not done:
     action = env.action_space.sample()  # Replace with your own action selection logic
     obs, reward, done, info = env.step(action)
 
-    # import pdb; pdb.set_trace()
     print(obs.shape)
     print('obs: ', obs)
     print('reward: ', reward)
