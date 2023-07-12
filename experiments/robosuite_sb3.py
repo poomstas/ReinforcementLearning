@@ -1,6 +1,8 @@
 # %%
 import os
 import robosuite as suite
+
+from datetime import datetime
 from robosuite.wrappers.gym_wrapper import GymWrapper
 from stable_baselines3 import SAC
 from stable_baselines3.sac.policies import MlpPolicy, CnnPolicy # TODO Use CNN policy for camera obs
