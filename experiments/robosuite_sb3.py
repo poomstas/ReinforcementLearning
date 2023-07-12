@@ -1,5 +1,6 @@
 # %%
 import os
+from datetime import datetime
 import robosuite as suite
 from robosuite.wrappers.gym_wrapper import GymWrapper
 from stable_baselines3 import SAC
@@ -22,9 +23,10 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 
 obs = env.reset()
 done = False
+tb_logger_name = datetime.now().strftime('SAC_%Y-%m-%d_%H-%M')
 
 model = SAC(policy='MlpPolicy', env=env, verbose=1)
-model.learn(total_timesteps=100000, log_interval=1)
+model.learn(total_timesteps=100000, log_interval=1, tb_log_name=tb_logger_name)
 model.save('PandaLift'); print('Model saved.')
 del model
 
