@@ -1,4 +1,5 @@
 # %%
+import os
 import robosuite as suite
 from robosuite.wrappers.gym_wrapper import GymWrapper
 from stable_baselines3 import SAC
@@ -13,36 +14,34 @@ env = suite.make(
     render_camera           = 'frontview', # ['frontview', 'birdview', 'agentview', 'sideview', 'robot0_robotview', 'robot0_eye_in_hand']
     reward_shaping          = True, # Sparse binary reward if False (indicating Success/Fail), more informing if True. True is easier to train.
 )
+env = GymWrapper(env)
 
 # %%
-env = GymWrapper(env)
+os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 
 obs = env.reset()
 done = False
 
 model = SAC('MlpPolicy', env, verbose=1)
-model.learn(total_timesteps=10000, log_interval=1)
+model.learn(total_timesteps=100000, log_interval=1)
+model.save('PandaLift')
+del model
 
 # %%
+model = SAC.load('20230712_PandaLift_nogood', env=env)
 episodes = 10
+rewards = []
+
 for ep in range(episodes):
     obs = env.reset()
-    done = False
+    episode_reward, done = 0, False
+
     while not done:
-        action, _states = model.predict(obs, deterministic=True)
-        obs, reward, done, info = env.step(action)
-        env.render() 
+        action = model.predict(obs)
+        obs, reward, dones, info = env.step(action[0])
+        episode_reward += reward
+        env.render()
+        # print('reward:', reward)
+    rewards.append(episode_reward)
+    print('='*90, '\n' 'Episode: {}, Reward: {}'.format(ep, episode_reward), '\n', '='*90)
 env.close()
-
-# %%
-# while not done:
-#     action = env.action_space.sample()  # Replace with your own action selection logic
-#     obs, reward, done, info = env.step(action)
-
-#     print(obs.shape)
-#     print('obs: ', obs)
-#     print('reward: ', reward)
-
-#     env.render()  # Remove this line if has_renderer=False
-
-# env.close()  # Close the environment
