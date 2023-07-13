@@ -1,18 +1,20 @@
 # %%
 import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 import robosuite as suite
 
 from datetime import datetime
 from robosuite.wrappers.gym_wrapper import GymWrapper
 from stable_baselines3 import SAC
 from stable_baselines3.sac.policies import MlpPolicy, CnnPolicy # TODO Use CNN policy for camera obs
+from stable_baselines3.common.callbacks import EvalCallback
 
 # %% Camera observation
 env = suite.make(
     env_name                = 'Lift',
     robots                  = 'Panda',
-    has_renderer            = True,
-    has_offscreen_renderer  = True,
+    has_renderer            = False,
+    has_offscreen_renderer  = False,
     use_camera_obs          = False,
     render_camera           = 'frontview', # ['frontview', 'birdview', 'agentview', 'sideview', 'robot0_robotview', 'robot0_eye_in_hand']
     reward_shaping          = True, # Sparse binary reward if False (indicating Success/Fail), more informing if True. True is easier to train.
@@ -20,15 +22,22 @@ env = suite.make(
 env = GymWrapper(env)
 
 # %%
-os.environ['CUDA_VISIBLE_DEVICES'] = '1'
-
 obs = env.reset()
 done = False
 tb_logger_name = datetime.now().strftime('SAC_%Y-%m-%d_%H-%M')
+eval_callback = EvalCallback(eval_env               = env, 
+                             best_model_save_path   = './saved_model', 
+                             log_path               = './logs', 
+                             eval_freq              = 10000, 
+                             deterministic          = True, 
+                             render                 = False, 
+                             verbose                = 1)
 
 model = SAC(policy='MlpPolicy', env=env, verbose=1)
-model.learn(total_timesteps=3000000, log_interval=1, tb_log_name=tb_logger_name)
-model.save('PandaLift'); print('Model saved.')
+model.learn(total_timesteps     = 3000000, 
+            log_interval        = 1, 
+            tb_log_name         = tb_logger_name, 
+            callback            = eval_callback)
 del model
 
 # %%
@@ -62,6 +71,10 @@ env.close()
 # Last run started 20230712 18:00
 # Run completed  20230713 07:43 (13.75 hours)
 # total_timesteps = 3000000
+
+# Last run started 20230713 14:15
+# Run completed XXXXXXXXXX (Estimated 14 hours)
+# total_timesteps = 5000000
 
 # %%
 # Try using the camera inputs from the model's head camera
