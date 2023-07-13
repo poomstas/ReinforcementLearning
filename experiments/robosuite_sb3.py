@@ -33,15 +33,17 @@ eval_callback = EvalCallback(eval_env               = env,
                              render                 = False, 
                              verbose                = 1)
 
-model = SAC(policy='MlpPolicy', env=env, verbose=1)
-model.learn(total_timesteps     = 3000000, 
+model = SAC(policy='MlpPolicy', env=env, verbose=1, tensorboard_log='./logs/SAC') # Start from scratch
+# model = SAC.load('20230712_PandaLift_3000000', env=env, tensorboard_log='./logs/SAC') # Load from previously saved
+model.learn(total_timesteps     = 1000000, 
             log_interval        = 1, 
             tb_log_name         = tb_logger_name, 
             callback            = eval_callback)
+model.save('20230713_PandaLift_1000000')
 del model
 
 # %%
-model = SAC.load('20230712_PandaLift_3000000', env=env)
+model = SAC.load('LoadName', env=env)
 episodes = 10
 rewards = []
 
@@ -71,10 +73,6 @@ env.close()
 # Last run started 20230712 18:00
 # Run completed  20230713 07:43 (13.75 hours)
 # total_timesteps = 3000000
-
-# Last run started 20230713 14:15
-# Run completed XXXXXXXXXX (Estimated 14 hours)
-# total_timesteps = 5000000
 
 # %%
 # Try using the camera inputs from the model's head camera
