@@ -12,7 +12,7 @@ env = suite.make(
     has_renderer            = True,
     has_offscreen_renderer  = True,
     use_camera_obs          = True,
-    render_camera           = 'agentview', # ['frontview', 'agentview', None, ?]
+    render_camera           = 'agentview', # ['frontview', 'birdview', 'agentview', 'sideview', 'robot0_robotview', 'robot0_eye_in_hand']
     reward_shaping          = True,
     camera_names            = ['frontview'], # ['frontview', 'agentview', None, ?]
 )
