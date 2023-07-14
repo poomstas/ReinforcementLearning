@@ -12,9 +12,9 @@ env = suite.make(
     has_renderer            = True,
     has_offscreen_renderer  = True,
     use_camera_obs          = True,
-    render_camera           = 'agentview', # ['frontview', 'birdview', 'agentview', 'sideview', 'robot0_robotview', 'robot0_eye_in_hand']
+    render_camera           = 'agentview', # ['frontview', 'birdview', 'agentview', 'sideview', 'robot0_robotview', 'robot0_eye_in_hand'] for env.render()
     reward_shaping          = True,
-    camera_names            = ['frontview'], # ['frontview', 'agentview', None, ?]
+    camera_names            = ['agentview'], # ['frontview', 'birdview', 'agentview', 'sideview', 'robot0_robotview', 'robot0_eye_in_hand'] for use_camera_obs=True
 )
 
 # %%
@@ -47,8 +47,8 @@ while not done:
     # Render camera observation
     img = obs[-256*256*3:] + 1
     img = np.reshape(img, (256, 256, 3)).astype(np.uint8)
-    plt.imshow(img)
-    plt.savefig('img_agentcamera.png')
-    import pdb; pdb.set_trace()
+    plt.imshow(img, origin='lower')
+    plt.savefig('img_agentcamera.png'); print('Saved camera data to image file. Exiting...')
+    break
 
     env.render()  # Remove this line if has_renderer=False
