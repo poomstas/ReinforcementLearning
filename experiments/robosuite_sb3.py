@@ -43,7 +43,7 @@ model.save('20230713_PandaLift_1000000')
 del model
 
 # %%
-model = SAC.load('LoadName', env=env)
+model = SAC.load('saved_model/best_model', env=env)
 episodes = 10
 rewards = []
 
